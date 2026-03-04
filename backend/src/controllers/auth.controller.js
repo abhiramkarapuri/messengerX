@@ -27,15 +27,19 @@ export const signup = async (req,res)=>{
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password,salt);
 
-    const newuser = new User({
+    const newUser = new User({
       fullName,
       email,
       password:hashedPassword
     })
 
-    if(newuser){
-      generateToken(newuser._id,res)
-      await newuser.save();
+    if(newUser){
+      // generateToken(newuser._id,res)
+      // await newuser.save();
+
+      //persist user first and then generate token
+      const savedUser = await newUser.save();
+      generateToken(savedUser._id,res);
 
       res.status(201).json({
         _id:newuser._id,
