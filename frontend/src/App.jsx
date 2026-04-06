@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes} from "react-router";
+import { Loader } from "lucide-react";
 import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from "./pages/SignUpPage";
@@ -7,12 +8,20 @@ import { useEffect } from "react";
 import {Toaster} from 'react-hot-toast'
 
 function App() {
-  const {checkAuth, isCheckingAuth, authUser} = useAuthStore()
+  const {checkAuth, authUser, isCheckingAuth} = useAuthStore()
 
   useEffect(()=>{
     checkAuth()
   }, [checkAuth])
   
+  if (isCheckingAuth && !authUser) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-900">
+        <Loader className="size-10 animate-spin text-cyan-500" />
+      </div>
+    )
+  }
+
   console.log({authUser})
 
   return (
